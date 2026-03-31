@@ -1,7 +1,6 @@
 plugins {
-    id("org.jetbrains.intellij") version "1.12.0"
-    java
-    kotlin("jvm") version "1.3.61"
+    kotlin("jvm") version "2.1.20"
+    id("org.jetbrains.intellij.platform") version "2.13.1"
 }
 
 group = "com.mnw.tabmover"
@@ -9,35 +8,19 @@ version = "1.5.0"
 
 repositories {
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-//    testCompile("junit", "junit", "4.12")
+    intellijPlatform {
+        intellijIdea("2025.2.6.1")
+        bundledPlugin("com.intellij.java")
+    }
 }
 
-// See https://github.com/JetBrains/gradle-intellij-plugin/
-intellij {
-    version.set("2022.1.1")
-    updateSinceUntilBuild.set(false)
-    plugins.set(listOf("com.intellij.java"))
-}
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-}
-tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-
-    patchPluginXml {
-        version.set("${project.version}")
-        sinceBuild.set("221")
-        untilBuild.set("232.*")
-    }
-}
-tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
+intellijPlatform {
+    buildSearchableOptions = false
 }
